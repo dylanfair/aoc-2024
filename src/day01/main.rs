@@ -32,9 +32,8 @@ where
     right.sort();
 
     let mut total_difference = 0;
-    for i in 0..left.len() {
-        let difference = left[i] - right[i];
-        total_difference += difference.abs();
+    for (num1, num2) in left.iter().zip(right.iter()) {
+        total_difference += num1.abs_diff(*num2);
     }
 
     println!("The total difference is {}", total_difference);
