@@ -82,37 +82,29 @@ where
     let text = read_to_string(input).unwrap();
     let mut safe_reports = 0;
     for line in text.lines() {
-        let (report_outcome, failed_position) = parse_line(line);
-
-        if !report_outcome {
-            if parse_line_two(line, failed_position) {
-                safe_reports += 1;
-            } else {
-                println!("{}", line);
-            }
-        } else {
+        if parse_line_two(line) {
             safe_reports += 1;
         }
     }
     println!("The number of safe reports is: {}", safe_reports);
 }
 
-fn parse_line_two(line: &str, failed_position: u64) -> bool {
-    let mut text_numbers: Vec<u64> = line
+fn parse_line_two(line: &str) -> bool {
+    let text_numbers: Vec<u64> = line
         .split_whitespace()
         .map(|x| x.parse::<u64>().unwrap())
         .collect();
-    let mut second_numbers = text_numbers.clone();
+    let text_numbers_len = text_numbers.len();
 
-    text_numbers.remove(failed_position as usize);
-    if check_report(text_numbers) {
-        return true;
-    }
-    second_numbers.remove(second_numbers.len() - 1);
-    if check_report(second_numbers) {
+    if check_report(text_numbers.clone()) {
         return true;
     }
 
+    for position in 0..text_numbers_len {
+        if remove_a_level_and_check(text_numbers.clone(), position) {
+            return true;
+        }
+    }
     false
 }
 
@@ -141,4 +133,9 @@ fn check_report(numbers: Vec<u64>) -> bool {
     }
 
     true
+}
+
+fn remove_a_level_and_check(mut numbers: Vec<u64>, remove: usize) -> bool {
+    numbers.remove(remove);
+    check_report(numbers)
 }
