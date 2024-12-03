@@ -105,16 +105,15 @@ fn parse_line_two(line: &str, failed_position: u64) -> bool {
     let mut second_numbers = text_numbers.clone();
 
     text_numbers.remove(failed_position as usize);
-    if !check_report(text_numbers) {
-        second_numbers.remove(second_numbers.len() - 1);
-        if !check_report(second_numbers) {
-            return false;
-        } else {
-            return true;
-        }
-    } else {
+    if check_report(text_numbers) {
         return true;
     }
+    second_numbers.remove(second_numbers.len() - 1);
+    if check_report(second_numbers) {
+        return true;
+    }
+
+    false
 }
 
 fn check_report(numbers: Vec<u64>) -> bool {
